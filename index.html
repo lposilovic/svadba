@@ -12,433 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <style>
-        :root {
-            --primary-pink: #fdf2f5; /* Lighter, softer pink */
-            --text-dark: #2c2c2c;
-            --text-light: #ffffff;
-            --accent-gold: #c5a059; /* More sophisticated gold */
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.3);
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-light);
-            overflow-x: hidden;
-            background-color: transparent;
-        }
-
-        /* BACKGROUND LAYERS 
-           Instead of changing one background, we stack them and fade opacities 
-        */
-        #bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background-color: var(--primary-pink);
-        }
-
-        .bg-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0; /* Hidden by default, GSAP handles this */
-        }
-
-        .music-control {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .music-control:hover { background: rgba(255,255,255,0.3); }
-
-        .music-icon {
-            width: 20px;
-            height: 20px;
-            fill: var(--accent-gold);
-        }
-
-        .pulse {
-            animation: pulse-animation 2s infinite;
-        }
-
-        @keyframes pulse-animation {
-            0% { box-shadow: 0 0 0 0px rgba(197, 160, 89, 0.4); }
-            100% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
-        }
-
-        /* TYPOGRAPHY */
-        h1, h2, h3 { 
-            font-family: 'Gveret Levin', cursive; 
-            color: var(--accent-gold); 
-            line-height: 1.2;
-            margin-top: 0;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.4); /* Softer shadow */
-        }
-
-        h1 { font-size: 5rem; }
-        h2 { font-size: 3.5rem; }
-
-        p {
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto 20px auto;
-            line-height: 1.6;
-            font-weight: 400;
-            color: var(--text-light);
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 3.5rem; }
-            h2 { font-size: 2.5rem; }
-            p { font-size: 1rem; }
-        }
-
-        /* MODERN BUTTON STYLING */
-        .btn {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-dark);
-            border: 1px solid var(--accent-gold);
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .btn:hover { 
-            background: var(--accent-gold); 
-            color: white; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
-        }
-
-        .skip-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        /* PANELS & GLASSMORPHISM */
-        #scroll-container { position: relative; width: 100%; }
-
-        .panel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .panel.active { opacity: 1; visibility: visible; }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
-            border: 1px solid var(--glass-border);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .glass-card-blurrier {
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid var(--glass-border);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .img-placeholder {
-            width: 100%;
-            max-width: 350px;
-            height: auto;
-            aspect-ratio: 3/4;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 4px solid white;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .quiz-btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1rem;
-        }
-
-        #quiz-feedback {
-            margin-top: 20px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            min-height: 24px;
-        }
-
-        /* DETAILS SECTION */
-        #details {
-            position: relative;
-            background: var(--primary-pink);
-            color: var(--text-dark);
-            min-height: 100vh;
-            padding: 100px 20px;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        #details h1 {
-            color: var(--accent-gold);
-            text-shadow: none;
-        }
-
-        #details p {
-            color: var(--text-dark);
-            text-shadow: none;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-            max-width: 900px;
-            margin: 50px auto 0 auto;
-            text-align: center;
-        }
-
-        .detail-card {
-            background: white;
-            padding: 40px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .detail-card:hover {
-            transform: translateY(-5px);
-        }
-
-        #details {
-            background: var(--primary-pink);
-            color: var(--text-dark);
-            padding: 100px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .timeline-container {
-            position: relative;
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 20px 0;
-        }
-
-        /* The vertical line base */
-        .timeline-line-bg {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: rgba(0, 0, 0, 0.1);
-            transform: translateX(-50%);
-        }
-
-        /* The "progress" line that fills on scroll */
-        .timeline-line-progress {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 2px;
-            height: 0; /* Animated via GSAP */
-            background: var(--accent-gold);
-            transform: translateX(-50%);
-            z-index: 1;
-        }
-
-        .timeline-item {
-            position: relative;
-            width: 100%;
-            margin-bottom: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0; /* Animated via GSAP */
-        }
-
-        /* The dots on the timeline */
-        .timeline-dot {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border: 2px solid var(--accent-gold);
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .timeline-content {
-            width: 40%;
-            padding: 20px;
-            text-align: right;
-            margin-right: 55%; /* Offset to the left */
-        }
-
-        .timeline-item:nth-child(even) .timeline-content {
-            text-align: left;
-            margin-right: 0;
-            margin-left: 55%; /* Offset to the right */
-        }
-
-        .timeline-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            color: var(--accent-gold);
-        }
-
-        .timeline-content p {
-            color: var(--text-dark);
-            font-size: 1rem;
-            margin: 0;
-            text-shadow: none;
-        }
-
-        /* The dotted line part at the end */
-        .until-zora {
-            text-align: center;
-            margin-top: 40px;
-            font-family: 'Gveret Levin', cursive;
-            font-size: 2.5rem;
-            color: var(--accent-gold);
-        }
-
-        .dotted-spacer {
-            height: 60px;
-            border-left: 2px dotted var(--accent-gold);
-            margin: 0 auto;
-            width: 0px;
-        }
-
-        .logistics-section {
-            padding: 100px 20px;
-            /* background: var(--primary-pink); Removed to show fixed background */
-            color: var(--text-dark);
-            position: relative;
-            z-index: 20; /* Ensure it stays above the pinned backgrounds */
-            /* margin-top: 100vh; Removed to fix flow */
-        }
-
-        .logistics-container {
-            max-width: 1100px; /* Wider to fit 3 cards better */
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .logistics-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .logistics-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .logistics-card h2 {
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .info-row svg {
-            width: 30px;
-            height: 30px;
-            flex-shrink: 0;
-            fill: var(--accent-gold);
-        }
-
-        .info-row p {
-            color: var(--text-dark);
-            margin: 0;
-            font-size: 0.95rem;
-            text-shadow: none;
-            line-height: 1.4;
-        }
-
-        .parking-note {
-            grid-column: 1 / -1; /* Makes the parking section full width */
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -450,21 +24,21 @@
     </div>
 
     <audio id="bg-music" loop>
-        <source src="SLIKE/adore-u.mp3" type="audio/mpeg">
+        <source src="MUSIC/adore-u.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <button class="btn skip-btn" onclick="scrollToDetails()">Preskoči sladunjavost</button>
 
     <div id="scroll-container">
-        <section class="panel active" data-bg="SLIKE/cover_1.jpg">
+        <section class="panel active" data-bg="IMAGES/cover_1.jpg">
             <div>
                 <h1>Ovo nije poziv na svadbu</h1>
                 <p>...ili ovaj put možda i je?</p>
             </div>
         </section>
 
-        <section class="panel" data-bg="SLIKE/cover_2.jpg">
+        <section class="panel" data-bg="IMAGES/cover_2.jpg">
             <div class="glass-card">
                 <h2>14.02.2025. Brewster Glacier na Novom Zelandu</h2>
                 <p>Luka je pao na koljeno, Petra je zaplakala, nije mogla vjerovati, ali naravno, rekla je "da"!</p>
@@ -473,7 +47,7 @@
             </div>
         </section>
 
-        <section class="panel" data-bg="SLIKE/cover_3.jpg">
+        <section class="panel" data-bg="IMAGES/cover_3.jpg">
             <div class="glass-card-blurrier">
                 <h2>Za one koji žele znati više!</h2>
                 <p>Od kad su Petra i Luka zajedno?</p>
@@ -486,7 +60,7 @@
             </div>
         </section>
 
-        <section class="panel" data-bg="SLIKE/cover_4.jpg">
+        <section class="panel" data-bg="IMAGES/cover_4.jpg">
             <div class="glass-card">
                 <h2>Dosta zaebansije.</h2>
                 <p>Ono najbitnije što trebate znati.</p>
@@ -546,7 +120,7 @@
         <div class="until-zora">...dok se noge ne umore</div>
     </div>
 
-    <section class="logistics-section" data-bg="SLIKE/cover_5.jpg">
+    <section class="logistics-section" data-bg="IMAGES/cover_5.jpg">
         <div class="logistics-container">
             
             <div class="logistics-card">
@@ -582,7 +156,7 @@
     </section>
 
 
-    <section class="logistics-section" data-bg="SLIKE/cover_6.jpg">
+    <section class="logistics-section" data-bg="IMAGES/cover_6.jpg">
         <div class="logistics-container">
             
             <div class="logistics-card">
@@ -603,7 +177,7 @@
         </div>
     </section>
 
-    <section class="logistics-section" data-bg="SLIKE/cover_7.jpg">
+    <section class="logistics-section" data-bg="IMAGES/cover_7.jpg">
         <div class="logistics-container">
             
             <div class="logistics-card">
@@ -620,167 +194,6 @@
         </div>
     </section>
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-
-        const panels = gsap.utils.toArray(".panel");
-        const bgContainer = document.getElementById("bg-container");
-
-        // 1. DYNAMICALLY CREATE BACKGROUND LAYERS
-        panels.forEach((panel, i) => {
-            let bgUrl = panel.getAttribute('data-bg');
-            let bgLayer = document.createElement('div');
-            bgLayer.className = 'bg-layer';
-            bgLayer.style.backgroundImage = `url('${bgUrl}')`;
-            bgLayer.style.zIndex = i; 
-            
-            if (i === 0) bgLayer.style.opacity = 1; 
-            
-            bgContainer.appendChild(bgLayer);
-            panel.bgLayer = bgLayer; 
-        });
-
-        // 2. CREATE THE GSAP TIMELINE
-        let tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: "#scroll-container",
-                start: "top top",
-                end: `+=${panels.length * 1200}`, // Slightly longer for smoother fades
-                scrub: 1, 
-                pin: true,
-                pinSpacing: true,
-                anticipatePin: 1
-            }
-        });
-
-        // 3. ANIMATE PANELS (WITH FADE IN AND FADE OUT)
-        panels.forEach((panel, i) => {
-            
-            // --- FADE IN PHASE ---
-            if (i !== 0) {
-                // Fade background and content IN
-                tl.to(panel.bgLayer, { opacity: 1, duration: 1, ease: "power2.inOut" }, ">-0.5");
-                tl.to(panel, { opacity: 1, visibility: "visible", duration: 1, ease: "power2.inOut" }, "<");
-            }
-            
-            // --- HOLD PHASE (Reading time) ---
-            tl.to({}, { duration: 1.5 }); 
-            
-            // --- FADE OUT PHASE ---
-            // We fade out every panel EXCEPT the last one (so it stays visible as you scroll to details)
-            if (i !== panels.length - 1) {
-                tl.to(panel, { 
-                    opacity: 0, 
-                    visibility: "hidden", 
-                    duration: 1, 
-                    ease: "power2.inOut" 
-                });
-                tl.to(panel.bgLayer, { 
-                    opacity: 0, 
-                    duration: 1, 
-                    ease: "power2.inOut" 
-                }, "<"); // "<" means start at the same time as the panel fade
-            }
-        });
-
-        // QUIZ LOGIC
-        function quizAnswer(isCorrect, btnElement) {
-            const feedback = document.getElementById('quiz-feedback');
-            document.querySelectorAll('.quiz-btn').forEach(btn => {
-                btn.style.background = '';
-                btn.style.color = '';
-            });
-
-            if(isCorrect) {
-                feedback.innerHTML = "✨ Bravooo! Vidimo se na svadbi! ✨";
-                feedback.style.color = "var(--accent-gold)";
-                btnElement.style.background = "#4CAF50"; 
-                btnElement.style.color = "white";
-            } else {
-                feedback.innerHTML = "Zar nas toliko slabo poznaješ? Pokušaj ponovno!";
-                feedback.style.color = "#ff6b6b"; 
-                btnElement.style.background = "#ff6b6b"; 
-                btnElement.style.color = "white";
-            }
-        }
-
-        // MUSIC LOGIC
-        const music = document.getElementById('bg-music');
-        const musicText = document.getElementById('music-text');
-        const musicBtn = document.querySelector('.music-control');
-
-        function toggleMusic() {
-            if (music.paused) {
-                music.play();
-                musicText.innerText = "Stani Blaž!";
-                musicBtn.classList.remove('pulse');
-            } else {
-                music.pause();
-                musicText.innerText = "Vužgi ga Blaž!";
-            }
-        }
-
-        function scrollToDetails() {
-            document.getElementById('details').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // --- Timeline Animations ---
-        gsap.to(".timeline-line-progress", {
-            height: "100%",
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".timeline-container",
-                start: "top 70%",
-                end: "bottom 70%",
-                scrub: true
-            }
-        });
-
-        const items = gsap.utils.toArray(".timeline-item");
-        items.forEach((item) => {
-            gsap.to(item, {
-                opacity: 1,
-                y: -20,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: item,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-
-        // --- LOGISTICS SECTIONS BACKGROUNDS ---
-        const logisticsSections = gsap.utils.toArray(".logistics-section");
-        
-        logisticsSections.forEach((section, i) => {
-            let bgUrl = section.getAttribute('data-bg');
-            if (bgUrl) {
-                // Create background layer
-                let bgLayer = document.createElement('div');
-                bgLayer.className = 'bg-layer';
-                bgLayer.style.backgroundImage = `url('${bgUrl}')`;
-                
-                // Ensure these are ON TOP of the previous layers
-                // The panels.length gives us the count of previous layers (0-index based)
-                // So start z-index from panels.length + 10 to be safe
-                bgLayer.style.zIndex = panels.length + 10 + i; 
-                bgLayer.style.opacity = 0; // Hidden by default
-                
-                bgContainer.appendChild(bgLayer);
-                
-                // Create ScrollTrigger to fade in/out
-                ScrollTrigger.create({
-                    trigger: section,
-                    start: "top center", 
-                    end: "bottom center",
-                    onEnter: () => gsap.to(bgLayer, { opacity: 1, duration: 0.5 }),
-                    onLeave: () => gsap.to(bgLayer, { opacity: 0, duration: 0.5 }),
-                    onEnterBack: () => gsap.to(bgLayer, { opacity: 1, duration: 0.5 }),
-                    onLeaveBack: () => gsap.to(bgLayer, { opacity: 0, duration: 0.5 })
-                });
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
