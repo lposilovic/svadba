@@ -230,3 +230,12 @@ logisticsSections.forEach((section, i) => {
         });
     }
 });
+// Scroll Down Arrow Logic
+const scrollArrow = document.getElementById('scroll-arrow');
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 100) {
+        scrollArrow.classList.add('hidden');
+    } else {
+        scrollArrow.classList.remove('hidden');
+    }
+});
