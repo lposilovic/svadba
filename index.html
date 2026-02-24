@@ -50,11 +50,9 @@
         <section class="panel" data-bg="IMAGES/cover_3.jpg">
             <div class="glass-card-blurrier">
                 <h2>Za one koji žele znati više!</h2>
-                <p>Od kad su Petra i Luka zajedno?</p>
-                <div class="quiz-options">
-                    <button class="btn quiz-btn" onclick="quizAnswer(false, this)">2010</button>
-                    <button class="btn quiz-btn" onclick="quizAnswer(false, this)">2013</button>
-                    <button class="btn quiz-btn" onclick="quizAnswer(true, this)">2011</button>
+                <p id="quiz-question"></p>
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Options will be generated here -->
                 </div>
                 <p id="quiz-feedback"></p>
             </div>
@@ -63,7 +61,7 @@
         <section class="panel" data-bg="IMAGES/cover_4.jpg">
             <div class="glass-card">
                 <h2>Dosta zaebansije.</h2>
-                <p>Ono najbitnije što trebate znati.</p>
+                <p>Ide ono najbitnije što trebaš znati.</p>
             </div>
         </section>
     </div>

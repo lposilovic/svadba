@@ -61,25 +61,97 @@ panels.forEach((panel, i) => {
 });
 
 // QUIZ LOGIC
-function quizAnswer(isCorrect, btnElement) {
-    const feedback = document.getElementById('quiz-feedback');
-    document.querySelectorAll('.quiz-btn').forEach(btn => {
-        btn.style.background = '';
-        btn.style.color = '';
-    });
+const questions = [
+    {
+        question: "Od kad su Petra i Luka zajedno?",
+        options: ["2010", "2013", "2011"],
+        correctIndex: 2
+    },
+    {
+        question: "Gdje su se upoznali?",
+        options: ["Gardaland", "MIOC", "Dublin pub"],
+        correctIndex: 0
+    },
+    {
+        question: "Gdje im je bilo prvo zajedničko putovanje?",
+        options: ["Ljubljana", "Pariz", "Tanzanija"],
+        correctIndex: 1
+    },
+    {
+        question: "Petra i Luka od 2016. godine volontiraju u jednoj humanitarnoj udruzi, kako se ona zove?",
+        options: ["Krug ljubavi", "Kolajna ljubavi", "Zajedno za Afriku"],
+        correctIndex: 1
+    }
+];
 
-    if(isCorrect) {
-        feedback.innerHTML = "✨ Bravooo! Vidimo se na svadbi! ✨";
-        feedback.style.color = "var(--accent-gold)";
+let currentQuestionIndex = 0;
+const questionEl = document.getElementById('quiz-question');
+const optionsEl = document.getElementById('quiz-options');
+const feedbackEl = document.getElementById('quiz-feedback');
+
+function loadQuestion() {
+    // Reset state
+    feedbackEl.innerHTML = "";
+    optionsEl.innerHTML = "";
+    
+    if (currentQuestionIndex >= questions.length) {
+        // Quiz finished
+        questionEl.style.display = 'none';
+        feedbackEl.innerHTML = "✨ Bravooo! Vidimo se na svadbi! ✨";
+        feedbackEl.style.color = "var(--accent-gold)";
+        return;
+    }
+
+    const currentQuestion = questions[currentQuestionIndex];
+    questionEl.innerText = currentQuestion.question;
+    questionEl.style.display = 'block';
+
+    currentQuestion.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn quiz-btn';
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(index, btn);
+        optionsEl.appendChild(btn);
+    });
+}
+
+function checkAnswer(selectedIndex, btnElement) {
+    const currentQuestion = questions[currentQuestionIndex];
+    
+    // Disable all buttons to prevent multiple clicks
+    const allBtns = optionsEl.querySelectorAll('.quiz-btn');
+    allBtns.forEach(btn => btn.disabled = true);
+
+    if (selectedIndex === currentQuestion.correctIndex) {
         btnElement.style.background = "#4CAF50"; 
         btnElement.style.color = "white";
+        feedbackEl.innerHTML = "Točno!";
+        feedbackEl.style.color = "#4CAF50";
+        
+        // Wait 1.5 seconds then go to next question
+        setTimeout(() => {
+            currentQuestionIndex++;
+            loadQuestion();
+        }, 1500);
+
     } else {
-        feedback.innerHTML = "Zar nas toliko slabo poznaješ? Pokušaj ponovno!";
-        feedback.style.color = "#ff6b6b"; 
         btnElement.style.background = "#ff6b6b"; 
         btnElement.style.color = "white";
+        feedbackEl.innerHTML = "Razmislit ćemo ponovo jesi pozvan/a 😅";
+        feedbackEl.style.color = "#ff6b6b";
+        
+        // Re-enable buttons to try again
+        setTimeout(() => {
+            allBtns.forEach(btn => btn.disabled = false);
+            btnElement.style.background = ""; 
+            btnElement.style.color = "";
+        }, 1500);
     }
 }
+
+// Initialize quiz
+document.addEventListener('DOMContentLoaded', loadQuestion);
+
 
 // MUSIC LOGIC
 const music = document.getElementById('bg-music');
