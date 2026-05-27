@@ -528,6 +528,72 @@ p {
     display: block;
 }
 
+/* ALBUM SECTION */
+.album-section {
+    background-color: var(--primary-pink);
+    padding: 80px 40px;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+.album-content {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.album-content h2 {
+    font-family: 'Gveret Levin', cursive;
+    color: var(--accent-gold);
+    font-size: 2rem;
+    margin-bottom: 16px;
+    text-shadow: none;
+}
+
+.album-content p {
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0 0 30px 0;
+    text-shadow: none;
+}
+
+.album-qr {
+    display: inline-block;
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.album-qr img {
+    width: 200px;
+    height: 200px;
+    display: block;
+}
+
+.album-hint {
+    font-size: 0.85rem !important;
+    opacity: 0.6;
+    margin: 0 !important;
+}
+
+.album-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--accent-gold);
+    font-size: 0.9rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s;
+}
+
+.album-link:hover {
+    opacity: 0.7;
+}
+
 /* FOOTER */
 .site-footer {
     background-color: var(--primary-pink);
