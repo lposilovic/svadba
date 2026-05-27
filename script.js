@@ -158,6 +158,20 @@ const music = document.getElementById('bg-music');
 const musicText = document.getElementById('music-text');
 const musicBtn = document.querySelector('.music-control');
 
+// Toggle dark text on music button when over light backgrounds
+const lightSections = document.querySelectorAll('#details, .logistics-section, .rsvp-section, .site-footer');
+lightSections.forEach(section => {
+    ScrollTrigger.create({
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter: () => musicBtn.classList.add('dark-mode'),
+        onLeave: () => musicBtn.classList.remove('dark-mode'),
+        onEnterBack: () => musicBtn.classList.add('dark-mode'),
+        onLeaveBack: () => musicBtn.classList.remove('dark-mode'),
+    });
+});
+
 function toggleMusic() {
     if (music.paused) {
         music.play();

@@ -60,6 +60,19 @@ body, html {
 
 .music-control:hover { background: rgba(255,255,255,0.3); }
 
+.music-control.dark-mode {
+    background: rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.15);
+}
+
+.music-control.dark-mode #music-text {
+    color: var(--text-dark) !important;
+}
+
+.music-control.dark-mode .music-icon {
+    fill: var(--text-dark);
+}
+
 .scroll-down-arrow {
     position: fixed;
     bottom: 30px;
@@ -458,4 +471,76 @@ p {
 .parking-note {
     grid-column: 1 / -1; /* Makes the parking section full width */
     margin-top: 10px;
+}
+
+/* RSVP SECTION */
+.rsvp-section {
+    background-color: var(--primary-pink);
+    padding: 80px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.rsvp-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 750px;
+    width: 100%;
+}
+
+.rsvp-notice svg {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    fill: var(--accent-gold);
+    margin-top: 4px;
+}
+
+.rsvp-notice h2 {
+    color: var(--text-dark);
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+}
+
+.rsvp-notice p {
+    color: var(--text-dark);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-shadow: none;
+}
+
+.rsvp-form-wrapper {
+    width: 100%;
+    max-width: 750px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+
+.rsvp-form-wrapper iframe {
+    width: 100%;
+    height: 700px;
+    border: none;
+    display: block;
+}
+
+/* FOOTER */
+.site-footer {
+    background-color: var(--primary-pink);
+    text-align: center;
+    padding: 24px 20px;
+    border-top: 1px solid rgba(197, 160, 89, 0.3);
+}
+
+.site-footer p {
+    color: var(--text-dark);
+    font-size: 0.85rem;
+    margin: 0;
+    opacity: 0.7;
+    text-shadow: none;
+    letter-spacing: 0.03em;
 }
