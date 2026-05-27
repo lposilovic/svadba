@@ -175,11 +175,11 @@ lightSections.forEach(section => {
 function toggleMusic() {
     if (music.paused) {
         music.play();
-        musicText.innerText = "Stani Blaž!";
+        musicText.innerText = "Take a break!";
         musicBtn.classList.remove('pulse');
     } else {
         music.pause();
-        musicText.innerText = "Vužgi ga Blaž!";
+        musicText.innerText = "Less go!";
     }
 }
 
