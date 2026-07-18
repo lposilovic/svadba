@@ -244,6 +244,37 @@ logisticsSections.forEach((section, i) => {
         });
     }
 });
+// --- COPY PHONE NUMBER ---
+function copyPhone(el) {
+    const phone = el.getAttribute('data-phone');
+    const showFeedback = () => {
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 1500);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(phone).then(showFeedback).catch(() => fallbackCopyText(phone, showFeedback));
+    } else {
+        fallbackCopyText(phone, showFeedback);
+    }
+}
+
+function fallbackCopyText(text, callback) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+    } catch (e) {
+        console.error('Copy failed', e);
+    }
+    document.body.removeChild(textarea);
+    callback();
+}
+
 // Scroll Down Arrow Logic
 const scrollArrow = document.getElementById('scroll-arrow');
 window.addEventListener('scroll', () => {
