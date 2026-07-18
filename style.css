@@ -468,6 +468,44 @@ p {
     line-height: 1.4;
 }
 
+.phone-copy {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    border-bottom: 1px dashed currentColor;
+}
+
+.phone-copy .copy-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    fill: var(--accent-gold);
+}
+
+.phone-copy::after {
+    content: "Kopirano!";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    background: var(--accent-gold);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.phone-copy.copied::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
 .parking-note {
     grid-column: 1 / -1; /* Makes the parking section full width */
     margin-top: 10px;
